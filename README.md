@@ -1,2 +1,2 @@
-# Simple_QE_HTML_generator
+# Simple QE HTML generator
  Simple HTML code generator for QuakeEngine.gitub.io
