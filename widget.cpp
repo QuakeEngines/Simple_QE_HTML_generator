@@ -1,38 +1,91 @@
 #include "widget.h"
-#include "ui_widget.h"
 
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
-    , ui(new Ui::Widget)
 {
-    ui->setupUi(this);
-    setWindowTitle("Simple QuakeEngine HTML generator");
 
+    setWindowTitle("Simple QuakeEngine HTML generator");
+    resize(700, 320);
+
+    QPushButton *generateButton = new QPushButton("Generate");
+    QPushButton *aboutButton = new QPushButton("About");
+
+    resultText = new QPlainTextEdit();
+
+    QLabel *label_1 = new QLabel("Source Repo URL:");
+    QLabel *label_2 = new QLabel("Target Repo URL:");
+    QLabel *label_3 = new QLabel("Official Website:");
+    QLabel *label_4 = new QLabel("Official Discord URL:");
+    QLabel *label_5 = new QLabel("Official Discord Name:");
+    QLabel *label_6 = new QLabel("Repo Description");
+    QLabel *label_7 = new QLabel("Resulting HTML Code:");
+
+    lineEdit_1 = new QLineEdit();
+    lineEdit_2 = new QLineEdit();
+    lineEdit_3 = new QLineEdit();
+    lineEdit_4 = new QLineEdit();
+    lineEdit_5 = new QLineEdit();
+    lineEdit_6 = new QLineEdit();
+
+    lineEdit_2->setPlaceholderText("Leave blank if repo name of this fork remains unchanged"); // for Target Repo URL
+    lineEdit_3->setPlaceholderText("If exists"); // for Official Website
+    lineEdit_4->setPlaceholderText("If exists"); // for Official Discord URL
+
+
+
+    QGridLayout *layout = new QGridLayout;
+    layout->addWidget(label_1, 0, 0);
+    layout->addWidget(label_2, 1, 0);
+    layout->addWidget(label_3, 2, 0);
+    layout->addWidget(label_4, 3, 0); // Discord URL (on one row , 0th col)
+    layout->addWidget(label_5, 3, 2); // Discord Name (same row , 2nd col)
+    layout->addWidget(label_6, 4, 0);
+    layout->addWidget(label_7, 5, 0);
+    layout->addWidget(aboutButton, 6, 0); //
+
+    layout->addWidget(lineEdit_1, 0, 1, 1 ,3);
+    layout->addWidget(lineEdit_2, 1, 1, 1 ,3);
+    layout->addWidget(lineEdit_3, 2, 1, 1 ,3);
+    layout->addWidget(lineEdit_4, 3, 1, 1, 1); // Discord URL field (on one row, 1st col)
+    layout->addWidget(lineEdit_5, 3, 3, 1, 1); // Discord URL (on one row , 3rd col)
+    layout->addWidget(lineEdit_6, 4, 1, 1 ,3);
+    layout->addWidget(resultText, 5, 1, 1 ,3);
+    layout->addWidget(generateButton, 6, 1, 1, 3);
+
+    setLayout(layout);
 
     // make enter key work within input fields
-    connect(ui->lineEdit, SIGNAL(returnPressed()), ui->generateButton, SIGNAL(clicked()));
-    connect(ui->lineEdit_2, SIGNAL(returnPressed()), ui->generateButton, SIGNAL(clicked()));
-    connect(ui->lineEdit_3, SIGNAL(returnPressed()), ui->generateButton, SIGNAL(clicked()));
-    connect(ui->lineEdit_4, SIGNAL(returnPressed()), ui->generateButton, SIGNAL(clicked()));
+    connect(lineEdit_1, SIGNAL(returnPressed()), generateButton, SIGNAL(clicked()));
+    connect(lineEdit_2, SIGNAL(returnPressed()), generateButton, SIGNAL(clicked()));
+    connect(lineEdit_3, SIGNAL(returnPressed()), generateButton, SIGNAL(clicked()));
+    connect(lineEdit_4, SIGNAL(returnPressed()), generateButton, SIGNAL(clicked()));
+    connect(lineEdit_5, SIGNAL(returnPressed()), generateButton, SIGNAL(clicked()));
+    connect(lineEdit_6, SIGNAL(returnPressed()), generateButton, SIGNAL(clicked()));
+
+
+    connect(generateButton, SIGNAL(clicked()), this, SLOT(generateHTML()));
+    connect(aboutButton, SIGNAL(clicked()), this, SLOT(showAboutDialog()));
 }
 
 
 Widget::~Widget()
 {
-    delete ui;
+
 }
 
 
-void Widget::on_generateButton_clicked()
+void Widget::generateHTML()
 {
     QString githubURL = "https://github.com/";
     QString sourceforgeURL = "https://sourceforge.net/p/";
     QString gitlabURL = "https://gitlab.com/";
-    QString sourceRepo = ui->lineEdit->text();
-    QString targetRepo = ui->lineEdit_2->text();
-    QString officialSite = ui->lineEdit_3->text();
-    QString descriptionText = ui->lineEdit_4->text();
+    QString sourceRepo = lineEdit_1->text();
+    QString targetRepo = lineEdit_2->text();
+    QString officialSite = lineEdit_3->text();
+    QString discordURL = lineEdit_4->text();
+    QString discordName = lineEdit_5->text();
+    QString descriptionText = lineEdit_6->text();
 
     QString shortSourceRepo = sourceRepo; // same by default
     QString shortTargetRepo = targetRepo;
@@ -43,12 +96,14 @@ void Widget::on_generateButton_clicked()
     QRegExp rx1(".*/(.*)$"); // regexp for getting repo name from relative path
 
 
-    QString HTMLBeginning = "<div class=\"item\">\n<h3><a href=\"@1\">@2</a> @3[@4]</h3>\n";
-    QString HTMLGithub = "<span class=\"subtext\">Mirrors: <a href=\"@5\">@6</a>,\n"
-                         "<a href=\"https://techgaun.github.io/active-forks/index.html#@4\">Other forks</a></span>\n";
-    QString HTMLOtherGit = "<span class=\"subtext\">Unofficial mirror on github: \n<a href=\"@5\">@6</a></span><br>\n";
-    QString HTMLOfficialSite = "<span class=\"subtext\">Official website: <a href=\"@7\">@8</a>\n</span>\n";
-    QString HTMLEnd = "<p>@9</p>\n</div>";
+    QString HTMLBeginning = "<div class=\"item\">\n<h3><a href=\"@01\">@02</a> @03[@04]</h3>\n";
+    QString HTMLGithub = "<span class=\"subtext\">Mirrors: <a href=\"@05\">@06</a>,\n"
+                         "<a href=\"https://techgaun.github.io/active-forks/index.html#@04\">Other forks</a></span><br>\n";
+    QString HTMLOtherGit = "<span class=\"subtext\">Unofficial mirror on github: \n<a href=\"@05\">@06</a></span><br>\n";
+    QString HTMLOfficialSite = "<span class=\"subtext\">Official website: <a href=\"@07\">@08</a>";
+    QString HTMLOfficialDiscord = "Official Discord channel: <a href=\"@09\">@10</a></span><br>\n";
+
+    QString HTMLEnd = "<p>@11</p>\n</div>";
 
 
     // ****************************************************************************
@@ -151,8 +206,34 @@ void Widget::on_generateButton_clicked()
         } else {
             officialSite = "http://" + officialSite; // add http:// if not exist
         }
+        shortOfficialSite.replace(QRegExp("/$"), ""); // remove last slash in URL for shortOfficialSite
+
+        if (!discordURL.isEmpty()) { // if Official Discord also exist
+            HTMLOfficialSite += " /\n"; // add slash and newline symbol in the end of HTML
+        } else {
+            HTMLOfficialSite += "\n</span><br>\n"; // if not - close span tag
+        }
+
     } else {
         HTMLOfficialSite = ""; // if officialSite field is empty - make HTMLOfficialSite blank too
+    }
+
+
+    // ****************************************************************************
+
+    // Official Discord field
+
+    if (!discordURL.isEmpty()) {
+        if (officialSite.isEmpty()) { // if Official Website field is empty -
+            HTMLOfficialDiscord = "<span class=\"subtext\">" + HTMLOfficialDiscord; // add opening span tag in the beginning of HTML
+        }
+
+    } else {
+        HTMLOfficialDiscord = ""; // if officialDiscord field is empty - make HTMLOfficialDiscord blank too
+    }
+
+    if (!discordURL.isEmpty() && discordName.isEmpty()) { // if discord URL is not empty, but name field is
+        resultHTML = "ERROR Please enter name of the Official Discord channel";
     }
 
 
@@ -169,9 +250,9 @@ void Widget::on_generateButton_clicked()
     if (resultHTML.isEmpty()) { // if resultHTML it not containing some error message
 
         if (sourceRepo.startsWith(githubURL)) { // if source repo is on github
-            resultHTML = HTMLBeginning + HTMLGithub + HTMLOfficialSite + HTMLEnd;
+            resultHTML = HTMLBeginning + HTMLGithub + HTMLOfficialSite + HTMLOfficialDiscord + HTMLEnd;
         } else {
-            resultHTML = HTMLBeginning + HTMLOtherGit + HTMLOfficialSite + HTMLEnd;
+            resultHTML = HTMLBeginning + HTMLOtherGit + HTMLOfficialSite + HTMLOfficialDiscord + HTMLEnd;
         }
     }
 
@@ -182,23 +263,25 @@ void Widget::on_generateButton_clicked()
 
     gitTags = sourceforgeTag + gitlabTag; // one of the tag wouldn't be blank (both are blank if its github)
 
-    resultHTML.replace("@1", sourceRepo);
-    resultHTML.replace("@2", repoName);
-    resultHTML.replace("@3", gitTags);
-    resultHTML.replace("@4", shortSourceRepo);
-    resultHTML.replace("@5", targetRepo);
-    resultHTML.replace("@6", shortTargetRepo);
-    resultHTML.replace("@7", officialSite);
-    resultHTML.replace("@8", shortOfficialSite);
-    resultHTML.replace("@9", descriptionText);
+    resultHTML.replace("@01", sourceRepo);
+    resultHTML.replace("@02", repoName);
+    resultHTML.replace("@03", gitTags);
+    resultHTML.replace("@04", shortSourceRepo);
+    resultHTML.replace("@05", targetRepo);
+    resultHTML.replace("@06", shortTargetRepo);
+    resultHTML.replace("@07", officialSite);
+    resultHTML.replace("@08", shortOfficialSite);
+    resultHTML.replace("@09", discordURL);
+    resultHTML.replace("@10", discordName);
+    resultHTML.replace("@11", descriptionText);
 
-    ui->resultText->setPlainText(resultHTML);
+    resultText->setPlainText(resultHTML);
 
 }
 
 
 
-void Widget::on_aboutButton_clicked()
+void Widget::showAboutDialog()
 {
     AboutDialog *aboutDialog = new AboutDialog(this);
     aboutDialog->resize(180, 100);

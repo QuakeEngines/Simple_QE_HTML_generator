@@ -24,8 +24,6 @@ HEADERS += \
     aboutdialog.h \
     widget.h
 
-FORMS += \
-    widget.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

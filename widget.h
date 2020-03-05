@@ -3,10 +3,9 @@
 
 #include <QWidget>
 #include "aboutdialog.h"
+#include <QtWidgets>
 
-QT_BEGIN_NAMESPACE
-namespace Ui { class Widget; }
-QT_END_NAMESPACE
+
 
 class Widget : public QWidget
 {
@@ -16,12 +15,19 @@ public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
 
-private slots:
-    void on_generateButton_clicked();
+    QLineEdit *lineEdit_1;
+    QLineEdit *lineEdit_2;
+    QLineEdit *lineEdit_3;
+    QLineEdit *lineEdit_4;
+    QLineEdit *lineEdit_5;
+    QLineEdit *lineEdit_6;
+    QPlainTextEdit *resultText;
 
-    void on_aboutButton_clicked();
+private slots:
+    void generateHTML();
+    void showAboutDialog();
 
 private:
-    Ui::Widget *ui;
+
 };
 #endif // WIDGET_H
