@@ -6,7 +6,7 @@ Widget::Widget(QWidget *parent)
 {
 
     setWindowTitle("Simple QuakeEngine HTML generator");
-    resize(700, 320);
+    resize(700, 340);
 
     QPushButton *generateButton = new QPushButton("Generate");
     QPushButton *aboutButton = new QPushButton("About");
