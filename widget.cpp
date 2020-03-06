@@ -97,8 +97,8 @@ void Widget::generateHTML()
 
 
     QString HTMLBeginning = "<div class=\"item\">\n<h3><a href=\"@01\">@02</a> @03[@04]</h3>\n";
-    QString HTMLGithub = "<span class=\"subtext\">Mirrors: <a href=\"@05\">@06</a>,\n"
-                         "<a href=\"https://techgaun.github.io/active-forks/index.html#@04\">Other forks</a></span><br>\n";
+    QString HTMLGithub = "<span class=\"subtext\">Mirrors:\n<a href=\"@05\">@06</a>,\n"
+                         "<a href=\"https://techgaun.github.io/active-forks/index.html#@04\">Other forks</a>\n</span><br>\n";
     QString HTMLOtherGit = "<span class=\"subtext\">Unofficial mirror on github: \n<a href=\"@05\">@06</a></span><br>\n";
     QString HTMLOfficialSite = "<span class=\"subtext\">Official website: <a href=\"@07\">@08</a>";
     QString HTMLOfficialDiscord = "Official Discord channel: <a href=\"@09\">@10</a></span><br>\n";
