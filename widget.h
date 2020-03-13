@@ -21,6 +21,7 @@ public:
     QLineEdit *lineEdit_4;
     QLineEdit *lineEdit_5;
     QLineEdit *lineEdit_6;
+    QComboBox  *orgList;
     QPlainTextEdit *resultText;
 
 private slots:

@@ -20,6 +20,7 @@ Widget::Widget(QWidget *parent)
     QLabel *label_5 = new QLabel("Official Discord Name:");
     QLabel *label_6 = new QLabel("Repo Description");
     QLabel *label_7 = new QLabel("Resulting HTML Code:");
+    QLabel *label_8 = new QLabel(" Target organization:");
 
     lineEdit_1 = new QLineEdit();
     lineEdit_2 = new QLineEdit();
@@ -28,15 +29,22 @@ Widget::Widget(QWidget *parent)
     lineEdit_5 = new QLineEdit();
     lineEdit_6 = new QLineEdit();
 
+    orgList = new QComboBox();
+    orgList->addItem("QuakeEngines");
+    orgList->addItem("QuakeMods");
+    orgList->addItem("QuakeTools");
+
     lineEdit_2->setPlaceholderText("Leave blank if repo name of this fork remains unchanged"); // for Target Repo URL
     lineEdit_3->setPlaceholderText("If exists"); // for Official Website
     lineEdit_4->setPlaceholderText("If exists"); // for Official Discord URL
 
 
 
+
     QGridLayout *layout = new QGridLayout;
     layout->addWidget(label_1, 0, 0);
-    layout->addWidget(label_2, 1, 0);
+    layout->addWidget(label_2, 1, 0);// Target Repo URL (one one row, 0th col)
+    layout->addWidget(label_8, 1, 2); // Target org. (same row , 2nd col)
     layout->addWidget(label_3, 2, 0);
     layout->addWidget(label_4, 3, 0); // Discord URL (on one row , 0th col)
     layout->addWidget(label_5, 3, 2); // Discord Name (same row , 2nd col)
@@ -45,10 +53,11 @@ Widget::Widget(QWidget *parent)
     layout->addWidget(aboutButton, 6, 0); //
 
     layout->addWidget(lineEdit_1, 0, 1, 1 ,3);
-    layout->addWidget(lineEdit_2, 1, 1, 1 ,3);
+    layout->addWidget(lineEdit_2, 1, 1, 1 ,1); // Target Repo field (one one row, 1st col)
+    layout->addWidget(orgList, 1, 3, 1 ,1); // Target org. field (same row , 3rd col)
     layout->addWidget(lineEdit_3, 2, 1, 1 ,3);
     layout->addWidget(lineEdit_4, 3, 1, 1, 1); // Discord URL field (on one row, 1st col)
-    layout->addWidget(lineEdit_5, 3, 3, 1, 1); // Discord URL (on one row , 3rd col)
+    layout->addWidget(lineEdit_5, 3, 3, 1, 1); // Discord URL (same row, 3rd col)
     layout->addWidget(lineEdit_6, 4, 1, 1 ,3);
     layout->addWidget(resultText, 5, 1, 1 ,3);
     layout->addWidget(generateButton, 6, 1, 1, 3);
@@ -66,6 +75,7 @@ Widget::Widget(QWidget *parent)
 
     connect(generateButton, SIGNAL(clicked()), this, SLOT(generateHTML()));
     connect(aboutButton, SIGNAL(clicked()), this, SLOT(showAboutDialog()));
+
 }
 
 
@@ -86,6 +96,7 @@ void Widget::generateHTML()
     QString discordURL = lineEdit_4->text();
     QString discordName = lineEdit_5->text();
     QString descriptionText = lineEdit_6->text();
+    QString orgName = orgList->currentText();
 
     QString shortSourceRepo = sourceRepo; // same by default
     QString shortTargetRepo = targetRepo;
@@ -176,7 +187,7 @@ void Widget::generateHTML()
             } else { // otherwise - assume its just name of repo
                 newRepoName = targetRepo;
             }
-            shortTargetRepo = "QuakeEngines/" + newRepoName;
+            shortTargetRepo = orgName+ "/" + newRepoName;
             targetRepo = githubURL + shortTargetRepo; // make full URL
 
         } else { // for full URL
@@ -185,14 +196,16 @@ void Widget::generateHTML()
 
     } else  { // if this field is empty
         if (sourceRepo.startsWith(githubURL)) { // for github
-            shortTargetRepo = "QuakeEngines"; // don't show repo name in relative path (shortTargetRepo) because it's same as original
-            targetRepo = githubURL + "QuakeEngines/" + repoName;
+            shortTargetRepo = orgName; // don't show repo name in relative path (shortTargetRepo) because it's same as original
+            targetRepo = githubURL + orgName + "/" + repoName;
 
         } else { // for other git services - show repo name just for clarity
-            shortTargetRepo = "QuakeEngines/" + repoName;
+            shortTargetRepo = orgName + "/" + repoName;
             targetRepo = githubURL + shortTargetRepo;
         }
     }
+
+
 
     // ****************************************************************************
 
