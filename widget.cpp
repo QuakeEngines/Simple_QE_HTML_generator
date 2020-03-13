@@ -214,8 +214,7 @@ void Widget::generateHTML()
     if (!officialSite.isEmpty()) {
 
         if (officialSite.startsWith("https://") || officialSite.startsWith("http://")) {
-            shortOfficialSite.replace("https://", "");
-            shortOfficialSite.replace("http://", "");
+            shortOfficialSite.replace(QRegExp("^https?://(www.)?") , ""); // remove http(s) and www for shortOfficialSite
         } else {
             officialSite = "http://" + officialSite; // add http:// if not exist
         }
