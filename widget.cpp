@@ -34,7 +34,7 @@ Widget::Widget(QWidget *parent)
     orgList->addItem("QuakeMods");
     orgList->addItem("QuakeTools");
 
-    lineEdit_2->setPlaceholderText("Leave blank if repo name of this fork remains unchanged"); // for Target Repo URL
+    lineEdit_2->setPlaceholderText("Leave blank if repo name remains unchanged"); // for Target Repo URL
     lineEdit_3->setPlaceholderText("If exists"); // for Official Website
     lineEdit_4->setPlaceholderText("If exists"); // for Official Discord URL
 
