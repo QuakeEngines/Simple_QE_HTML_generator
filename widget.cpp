@@ -33,7 +33,8 @@ Widget::Widget(QWidget *parent)
     orgList->addItem("QuakeEngines");
     orgList->addItem("QuakeMods");
     orgList->addItem("QuakeTools");
-    orgList->addItem("hlsources");
+    orgList->addItem("HLSources");
+    orgList->addItem("SourceSources");
 
     lineEdit_2->setPlaceholderText("Leave blank if repo name remains unchanged"); // for Target Repo URL
     lineEdit_3->setPlaceholderText("If exists"); // for Official Website
