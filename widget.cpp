@@ -114,7 +114,7 @@ void Widget::generateHTML()
                          "<a href=\"https://techgaun.github.io/active-forks/index.html#@04\">Other forks</a>\n</span><br>\n";
     QString HTMLOtherGit = "<span class=\"subtext\">Unofficial mirror on github: \n<a href=\"@05\">@06</a></span><br>\n";
     QString HTMLOfficialSite = "<span class=\"subtext\">Official website: <a href=\"@07\">@08</a>";
-    QString HTMLOfficialDiscord = "Official Discord channel: <a href=\"@09\">@10</a></span><br>\n";
+    QString HTMLOfficialDiscord = "Official Discord server: <a href=\"@09\">@10</a></span><br>\n";
 
     QString HTMLEnd = "<p>@11</p>\n</div>";
 
@@ -247,7 +247,7 @@ void Widget::generateHTML()
     }
 
     if (!discordURL.isEmpty() && discordName.isEmpty()) { // if discord URL is not empty, but name field is
-        resultHTML = "ERROR Please enter name of the Official Discord channel";
+        resultHTML = "ERROR Please enter name of the Official Discord server";
     }
 
 
